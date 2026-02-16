@@ -1,6 +1,6 @@
 # LLM & RAG Project
 
-A small project demonstrating **LangChain**, **LlamaIndex**, multiple **LLM APIs** (OpenAI, Anthropic, Hugging Face), **RAG** (retrieval-augmented generation), and **prompt engineering**.
+A  project demonstrating **LangChain**, **LlamaIndex**, multiple **LLM APIs** (OpenAI, Anthropic, Hugging Face, Google Gemini), **RAG** (retrieval-augmented generation), and **prompt engineering**.
 
 ## Setup
 
@@ -22,7 +22,8 @@ llm_rag/
 │   ├── base.py            # LLMProvider interface + get_provider()
 │   ├── openai_provider.py
 │   ├── anthropic_provider.py
-│   └── huggingface_provider.py
+│   ├── huggingface_provider.py
+│   └── gemini_provider.py
 └── rag/
     ├── langchain_rag.py   # RAG with LangChain (Chroma + prompt + LLM)
     └── llamaindex_rag.py  # RAG with LlamaIndex (Chroma + query engine)
@@ -40,15 +41,16 @@ python run_llm_demo.py --provider openai --prompts
 # With RAG (LangChain + LlamaIndex)
 python run_llm_demo.py --provider openai --rag
 
-# Use Anthropic or Hugging Face
+# Use Anthropic, Hugging Face, or Gemini
 python run_llm_demo.py --provider anthropic
 python run_llm_demo.py --provider huggingface --prompts
+python run_llm_demo.py --provider gemini
 ```
 
 ## Features
 
 - **LangChain & LlamaIndex**: RAG pipelines with Chroma; same logic can be run with either stack.
-- **LLM APIs**: Single interface (`get_provider(name)`) for OpenAI, Anthropic, and Hugging Face; each provider exposes LangChain and LlamaIndex-compatible LLMs.
+- **LLM APIs**: Single interface (`get_provider(name)`) for OpenAI, Anthropic, Hugging Face, and Google Gemini; each provider exposes LangChain and LlamaIndex-compatible LLMs.
 - **RAG**: Ingest documents, embed with OpenAI (or HF), store in Chroma, then query with a chosen LLM using a RAG prompt template.
 - **Prompt engineering**: Templates for RAG QA, summarization, and chain-of-thought in `llm_rag/prompts/templates.py`; used in the demo with `--prompts`.
 
@@ -57,3 +59,4 @@ python run_llm_demo.py --provider huggingface --prompts
 - **OpenAI**: Needed for the default provider and for embeddings in RAG. Get keys at [platform.openai.com](https://platform.openai.com).
 - **Anthropic**: Optional; for `--provider anthropic`. [console.anthropic.com](https://console.anthropic.com).
 - **Hugging Face**: Optional; for `--provider huggingface` and for local/HF embeddings. [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
+- **Google Gemini**: Optional; for `--provider gemini`. Get an API key at [Google AI Studio](https://aistudio.google.com/app/apikey).

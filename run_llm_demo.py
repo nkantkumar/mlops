@@ -5,7 +5,7 @@ Demo: LangChain & LlamaIndex, multi-LLM (OpenAI, Anthropic, Hugging Face), RAG, 
 Usage:
   pip install -r requirements-llm.txt
   cp .env.example .env   # add your API keys
-  python run_llm_demo.py [--provider openai|anthropic|huggingface] [--rag] [--prompts]
+  python run_llm_demo.py [--provider openai|anthropic|huggingface|gemini] [--rag] [--prompts]
 """
 
 import argparse
@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
 def demo_llm_providers(provider_name: str):
-    """Call one LLM provider (OpenAI, Anthropic, or Hugging Face)."""
+    """Call one LLM provider (OpenAI, Anthropic, Hugging Face, or Gemini)."""
     from llm_rag.llm_providers import get_provider
 
     provider = get_provider(provider_name)
@@ -123,7 +123,7 @@ def demo_rag_llamaindex(provider_name: str):
 
 def main():
     parser = argparse.ArgumentParser(description="LLM & RAG demo")
-    parser.add_argument("--provider", default="openai", choices=["openai", "anthropic", "huggingface"],
+    parser.add_argument("--provider", default="openai", choices=["openai", "anthropic", "huggingface", "gemini"],
                         help="LLM provider to use")
     parser.add_argument("--rag", action="store_true", help="Run LangChain and LlamaIndex RAG demos")
     parser.add_argument("--prompts", action="store_true", help="Run prompt engineering demos")

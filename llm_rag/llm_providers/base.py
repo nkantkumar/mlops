@@ -8,6 +8,7 @@ class ProviderName(str, Enum):
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
     HUGGINGFACE = "huggingface"
+    GEMINI = "gemini"
 
 
 class LLMProvider(ABC):
@@ -41,4 +42,7 @@ def get_provider(name: str, **kwargs) -> LLMProvider:
     if name == ProviderName.HUGGINGFACE:
         from .huggingface_provider import HuggingFaceProvider
         return HuggingFaceProvider(**kwargs)
-    raise ValueError(f"Unknown provider: {name}. Use openai, anthropic, or huggingface.")
+    if name == ProviderName.GEMINI:
+        from .gemini_provider import GeminiProvider
+        return GeminiProvider(**kwargs)
+    raise ValueError(f"Unknown provider: {name}. Use openai, anthropic, huggingface, or gemini.")
