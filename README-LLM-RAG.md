@@ -1,6 +1,6 @@
 # LLM & RAG Project
 
-A  project demonstrating **LangChain**, **LlamaIndex**, multiple **LLM APIs** (OpenAI, Anthropic, Hugging Face, Google Gemini), **RAG** (retrieval-augmented generation), and **prompt engineering**.
+A project demonstrating **LangChain**, **LlamaIndex**, **LLM APIs** (Anthropic, Google Gemini), **RAG** (retrieval-augmented generation), and **prompt engineering**.
 
 ## Setup
 
@@ -8,7 +8,7 @@ A  project demonstrating **LangChain**, **LlamaIndex**, multiple **LLM APIs** (O
 # From repo root
 pip install -r requirements-llm.txt
 cp .env.example .env
-# Edit .env and add at least OPENAI_API_KEY (and others as needed)
+# Edit .env and add GEMINI_API_KEY and/or ANTHROPIC_API_KEY
 ```
 
 ## Project layout
@@ -20,9 +20,7 @@ llm_rag/
 │   └── templates.py       # RAG QA, summarization, chain-of-thought templates
 ├── llm_providers/         # Multi-LLM abstraction
 │   ├── base.py            # LLMProvider interface + get_provider()
-│   ├── openai_provider.py
 │   ├── anthropic_provider.py
-│   ├── huggingface_provider.py
 │   └── gemini_provider.py
 └── rag/
     ├── langchain_rag.py   # RAG with LangChain (Chroma + prompt + LLM)
@@ -32,31 +30,27 @@ llm_rag/
 ## Run the demo
 
 ```bash
-# Simple LLM call (default: OpenAI)
-python run_llm_demo.py --provider openai
+# Simple LLM call (default: Gemini)
+python run_llm_demo.py --provider gemini
 
 # With prompt-engineering examples (RAG-style + chain-of-thought)
-python run_llm_demo.py --provider openai --prompts
+python run_llm_demo.py --provider gemini --prompts
 
 # With RAG (LangChain + LlamaIndex)
-python run_llm_demo.py --provider openai --rag
+python run_llm_demo.py --provider gemini --rag
 
-# Use Anthropic, Hugging Face, or Gemini
+# Use Anthropic
 python run_llm_demo.py --provider anthropic
-python run_llm_demo.py --provider huggingface --prompts
-python run_llm_demo.py --provider gemini
 ```
 
 ## Features
 
 - **LangChain & LlamaIndex**: RAG pipelines with Chroma; same logic can be run with either stack.
-- **LLM APIs**: Single interface (`get_provider(name)`) for OpenAI, Anthropic, Hugging Face, and Google Gemini; each provider exposes LangChain and LlamaIndex-compatible LLMs.
-- **RAG**: Ingest documents, embed with OpenAI (or HF), store in Chroma, then query with a chosen LLM using a RAG prompt template.
+- **LLM APIs**: Single interface (`get_provider(name)`) for Anthropic and Gemini; each provider exposes LangChain and LlamaIndex-compatible LLMs.
+- **RAG**: Ingest documents, embed with Gemini, store in Chroma, then query with a chosen LLM using a RAG prompt template.
 - **Prompt engineering**: Templates for RAG QA, summarization, and chain-of-thought in `llm_rag/prompts/templates.py`; used in the demo with `--prompts`.
 
 ## API keys
 
-- **OpenAI**: Needed for the default provider and for embeddings in RAG. Get keys at [platform.openai.com](https://platform.openai.com).
-- **Anthropic**: Optional; for `--provider anthropic`. [console.anthropic.com](https://console.anthropic.com).
-- **Hugging Face**: Optional; for `--provider huggingface` and for local/HF embeddings. [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
-- **Google Gemini**: Optional; for `--provider gemini`. Get an API key at [Google AI Studio](https://aistudio.google.com/app/apikey).
+- **Anthropic**: For `--provider anthropic`. [console.anthropic.com](https://console.anthropic.com).
+- **Google Gemini**: For `--provider gemini` and for RAG embeddings. Get an API key at [Google AI Studio](https://aistudio.google.com/app/apikey).

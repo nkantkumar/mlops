@@ -5,14 +5,12 @@ from enum import Enum
 
 
 class ProviderName(str, Enum):
-    OPENAI = "openai"
     ANTHROPIC = "anthropic"
-    HUGGINGFACE = "huggingface"
     GEMINI = "gemini"
 
 
 class LLMProvider(ABC):
-    """Abstract base for LLM providers (OpenAI, Anthropic, Hugging Face)."""
+    """Abstract base for LLM providers (Anthropic, Gemini)."""
 
     @abstractmethod
     def invoke(self, prompt: str, **kwargs) -> str:
@@ -31,18 +29,12 @@ class LLMProvider(ABC):
 
 
 def get_provider(name: str, **kwargs) -> LLMProvider:
-    """Factory: return provider by name (openai, anthropic, huggingface)."""
+    """Factory: return provider by name (anthropic, gemini)."""
     name = name.lower().strip()
-    if name == ProviderName.OPENAI:
-        from .openai_provider import OpenAIProvider
-        return OpenAIProvider(**kwargs)
     if name == ProviderName.ANTHROPIC:
         from .anthropic_provider import AnthropicProvider
         return AnthropicProvider(**kwargs)
-    if name == ProviderName.HUGGINGFACE:
-        from .huggingface_provider import HuggingFaceProvider
-        return HuggingFaceProvider(**kwargs)
     if name == ProviderName.GEMINI:
         from .gemini_provider import GeminiProvider
         return GeminiProvider(**kwargs)
-    raise ValueError(f"Unknown provider: {name}. Use openai, anthropic, huggingface, or gemini.")
+    raise ValueError(f"Unknown provider: {name}. Use anthropic or gemini.")

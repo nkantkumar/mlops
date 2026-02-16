@@ -7,7 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from llm_rag.config import settings
@@ -24,11 +24,11 @@ class LangChainRAG:
         top_k: int = 4,
     ):
         self.persist_dir = persist_dir or settings.CHROMA_PERSIST_DIR
-        self.embedding_model = embedding_model or settings.OPENAI_EMBEDDING_MODEL
+        self.embedding_model = embedding_model or settings.GEMINI_EMBEDDING_MODEL
         self.top_k = top_k
-        self._embeddings = OpenAIEmbeddings(
+        self._embeddings = GoogleGenerativeAIEmbeddings(
             model=self.embedding_model,
-            api_key=settings.OPENAI_API_KEY or None,
+            google_api_key=settings.GEMINI_API_KEY or None,
         )
         self._vectorstore: Chroma | None = None
         self._retriever = None

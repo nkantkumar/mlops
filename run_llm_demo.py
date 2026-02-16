@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Demo: LangChain & LlamaIndex, multi-LLM (OpenAI, Anthropic, Hugging Face), RAG, prompt engineering.
+Demo: LangChain & LlamaIndex, multi-LLM (Anthropic, Gemini), RAG, prompt engineering.
 
 Usage:
   pip install -r requirements-llm.txt
   cp .env.example .env   # add your API keys
-  python run_llm_demo.py [--provider openai|anthropic|huggingface|gemini] [--rag] [--prompts]
+  python run_llm_demo.py [--provider anthropic|gemini] [--rag] [--prompts]
 """
 
 import argparse
@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
 def demo_llm_providers(provider_name: str):
-    """Call one LLM provider (OpenAI, Anthropic, Hugging Face, or Gemini)."""
+    """Call one LLM provider (Anthropic or Gemini)."""
     from llm_rag.llm_providers import get_provider
 
     provider = get_provider(provider_name)
@@ -88,6 +88,7 @@ def demo_rag_langchain(provider_name: str):
 def demo_rag_llamaindex(provider_name: str):
     """RAG with LlamaIndex: set global LLM/embed model, build index, query."""
     from llama_index.core import Settings
+    from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
     from llm_rag.llm_providers import get_provider
     from llm_rag.rag import LlamaIndexRAG
     from llm_rag.config import settings as app_settings
@@ -95,15 +96,10 @@ def demo_rag_llamaindex(provider_name: str):
     # Set global LLM and embed model (required by LlamaIndex)
     provider = get_provider(provider_name)
     Settings.llm = provider.get_llamaindex_llm()
-    try:
-        from llama_index.embeddings.openai import OpenAIEmbedding
-        Settings.embed_model = OpenAIEmbedding(
-            model=app_settings.OPENAI_EMBEDDING_MODEL,
-            api_key=app_settings.OPENAI_API_KEY or None,
-        )
-    except Exception:
-        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-        Settings.embed_model = HuggingFaceEmbedding(model_name=app_settings.HF_EMBEDDING_MODEL)
+    Settings.embed_model = GoogleGenAIEmbedding(
+        model_name=app_settings.GEMINI_EMBEDDING_MODEL,
+        api_key=app_settings.GEMINI_API_KEY or None,
+    )
 
     docs = [
         "Python 3.12 was released in October 2023. It has better error messages.",
@@ -123,7 +119,7 @@ def demo_rag_llamaindex(provider_name: str):
 
 def main():
     parser = argparse.ArgumentParser(description="LLM & RAG demo")
-    parser.add_argument("--provider", default="openai", choices=["openai", "anthropic", "huggingface", "gemini"],
+    parser.add_argument("--provider", default="gemini", choices=["anthropic", "gemini"],
                         help="LLM provider to use")
     parser.add_argument("--rag", action="store_true", help="Run LangChain and LlamaIndex RAG demos")
     parser.add_argument("--prompts", action="store_true", help="Run prompt engineering demos")
