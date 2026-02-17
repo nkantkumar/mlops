@@ -5,12 +5,11 @@ from enum import Enum
 
 
 class ProviderName(str, Enum):
-    ANTHROPIC = "anthropic"
     GEMINI = "gemini"
 
 
 class LLMProvider(ABC):
-    """Abstract base for LLM providers (Anthropic, Gemini)."""
+    """Abstract base for LLM providers (Gemini)."""
 
     @abstractmethod
     def invoke(self, prompt: str, **kwargs) -> str:
@@ -29,12 +28,9 @@ class LLMProvider(ABC):
 
 
 def get_provider(name: str, **kwargs) -> LLMProvider:
-    """Factory: return provider by name (anthropic, gemini)."""
+    """Factory: return provider by name (gemini)."""
     name = name.lower().strip()
-    if name == ProviderName.ANTHROPIC:
-        from .anthropic_provider import AnthropicProvider
-        return AnthropicProvider(**kwargs)
     if name == ProviderName.GEMINI:
         from .gemini_provider import GeminiProvider
         return GeminiProvider(**kwargs)
-    raise ValueError(f"Unknown provider: {name}. Use anthropic or gemini.")
+    raise ValueError(f"Unknown provider: {name}. Use gemini.")

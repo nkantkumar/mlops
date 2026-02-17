@@ -3,19 +3,14 @@
 
 # LangChain
 langchain>=0.3.0
-langchain-anthropic>=0.2.0
 langchain-community>=0.3.0
 langchain-google-genai>=2.0.0
 
 # LlamaIndex (core + only the integrations we use; avoids pulling OpenAI/readers-file)
 llama-index-core>=0.11.0
-llama-index-llms-anthropic>=0.2.0
 llama-index-llms-gemini>=0.2.0
 llama-index-embeddings-google-genai>=0.2.0
 llama-index-vector-stores-chroma>=0.2.0
-
-# LLM API clients (optional, LangChain/LlamaIndex wrap these)
-anthropic>=0.39.0
 
 # RAG & embeddings
 chromadb>=0.5.0

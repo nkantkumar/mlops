@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Demo: LangChain & LlamaIndex, multi-LLM (Anthropic, Gemini), RAG, prompt engineering.
+Demo: LangChain & LlamaIndex, Gemini LLM, RAG, prompt engineering.
 
 Usage:
   pip install -r requirements-llm.txt
-  cp .env.example .env   # add your API keys
-  python run_llm_demo.py [--provider anthropic|gemini] [--rag] [--prompts]
+  cp .env.example .env   # add GEMINI_API_KEY
+  python run_llm_demo.py [--rag] [--prompts]
 """
 
 import argparse
@@ -15,9 +15,21 @@ import sys
 # Ensure project root is on path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+# Require langchain-google-genai (pip package name; import name is langchain_google_genai)
+try:
+    import langchain_google_genai  # noqa: F401
+except ModuleNotFoundError:
+    print("Missing dependency: langchain_google_genai")
+    print("Install in the same Python you use to run this script:")
+    print("  pip install langchain-google-genai")
+    print("  # or: pip install -r requirements-llm.txt")
+    print(f"  (Current Python: {sys.executable})")
+    print("In PyCharm: File → Settings → Project → Python Interpreter → select the env where you ran pip.")
+    sys.exit(1)
+
 
 def demo_llm_providers(provider_name: str):
-    """Call one LLM provider (Anthropic or Gemini)."""
+    """Call Gemini LLM."""
     from llm_rag.llm_providers import get_provider
 
     provider = get_provider(provider_name)
@@ -118,21 +130,32 @@ def demo_rag_llamaindex(provider_name: str):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="LLM & RAG demo")
-    parser.add_argument("--provider", default="gemini", choices=["anthropic", "gemini"],
-                        help="LLM provider to use")
-    parser.add_argument("--rag", action="store_true", help="Run LangChain and LlamaIndex RAG demos")
-    parser.add_argument("--prompts", action="store_true", help="Run prompt engineering demos")
-    args = parser.parse_args()
+    # Commented out: use default values when running (no CLI args)
+    # parser = argparse.ArgumentParser(description="LLM & RAG demo")
+    # parser.add_argument("--provider", default="gemini", choices=["gemini"],
+    #                     help="LLM provider (Gemini)")
+    # parser.add_argument("--rag", action="store_true", help="Run LangChain and LlamaIndex RAG demos")
+    # parser.add_argument("--prompts", action="store_true", help="Run prompt engineering demos")
+    # args = parser.parse_args()
 
-    print("Provider:", args.provider)
+    provider = "gemini"
+    run_prompts = True
+    run_rag = True
 
-    demo_llm_providers(args.provider)
-    if args.prompts:
-        demo_prompt_engineering(args.provider)
-    if args.rag:
-        demo_rag_langchain(args.provider)
-        demo_rag_llamaindex(args.provider)
+    print("Provider:", provider)
+
+    demo_llm_providers(provider)
+    if run_prompts:
+        demo_prompt_engineering(provider)
+    if run_rag:
+        try:
+            demo_rag_langchain(provider)
+        except Exception as e:
+            print(f"LangChain RAG demo skipped: {e}\n")
+        try:
+            demo_rag_llamaindex(provider)
+        except Exception as e:
+            print(f"LlamaIndex RAG demo skipped: {e}\n")
 
     print("Done.")
 

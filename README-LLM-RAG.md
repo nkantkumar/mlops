@@ -1,6 +1,6 @@
 # LLM & RAG Project
 
-A project demonstrating **LangChain**, **LlamaIndex**, **LLM APIs** (Anthropic, Google Gemini), **RAG** (retrieval-augmented generation), and **prompt engineering**.
+A project demonstrating **LangChain**, **LlamaIndex**, **Google Gemini** (LLM + embeddings), **RAG** (retrieval-augmented generation), and **prompt engineering**.
 
 ## Setup
 
@@ -8,19 +8,18 @@ A project demonstrating **LangChain**, **LlamaIndex**, **LLM APIs** (Anthropic, 
 # From repo root
 pip install -r requirements-llm.txt
 cp .env.example .env
-# Edit .env and add GEMINI_API_KEY and/or ANTHROPIC_API_KEY
+# Edit .env and add GEMINI_API_KEY
 ```
 
 ## Project layout
 
 ```
 llm_rag/
-├── config.py              # Settings from .env (API keys, models)
+├── config.py              # Settings from .env (API key, models)
 ├── prompts/
 │   └── templates.py       # RAG QA, summarization, chain-of-thought templates
-├── llm_providers/         # Multi-LLM abstraction
+├── llm_providers/         # LLM abstraction
 │   ├── base.py            # LLMProvider interface + get_provider()
-│   ├── anthropic_provider.py
 │   └── gemini_provider.py
 └── rag/
     ├── langchain_rag.py   # RAG with LangChain (Chroma + prompt + LLM)
@@ -30,27 +29,26 @@ llm_rag/
 ## Run the demo
 
 ```bash
-# Simple LLM call (default: Gemini)
-python run_llm_demo.py --provider gemini
+# Simple LLM call
+python run_llm_demo.py
 
 # With prompt-engineering examples (RAG-style + chain-of-thought)
-python run_llm_demo.py --provider gemini --prompts
+python run_llm_demo.py --prompts
 
 # With RAG (LangChain + LlamaIndex)
-python run_llm_demo.py --provider gemini --rag
+python run_llm_demo.py --rag
 
-# Use Anthropic
-python run_llm_demo.py --provider anthropic
+# All: prompts + RAG
+python run_llm_demo.py --prompts --rag
 ```
 
 ## Features
 
 - **LangChain & LlamaIndex**: RAG pipelines with Chroma; same logic can be run with either stack.
-- **LLM APIs**: Single interface (`get_provider(name)`) for Anthropic and Gemini; each provider exposes LangChain and LlamaIndex-compatible LLMs.
-- **RAG**: Ingest documents, embed with Gemini, store in Chroma, then query with a chosen LLM using a RAG prompt template.
+- **Gemini**: Single provider for chat and RAG embeddings via `get_provider("gemini")`.
+- **RAG**: Ingest documents, embed with Gemini, store in Chroma, then query with Gemini using a RAG prompt template.
 - **Prompt engineering**: Templates for RAG QA, summarization, and chain-of-thought in `llm_rag/prompts/templates.py`; used in the demo with `--prompts`.
 
-## API keys
+## API key
 
-- **Anthropic**: For `--provider anthropic`. [console.anthropic.com](https://console.anthropic.com).
-- **Google Gemini**: For `--provider gemini` and for RAG embeddings. Get an API key at [Google AI Studio](https://aistudio.google.com/app/apikey).
+- **Google Gemini**: For the LLM and for RAG embeddings. Get an API key at [Google AI Studio](https://aistudio.google.com/app/apikey).
